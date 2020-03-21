@@ -29,12 +29,11 @@ namespace Web_Api
         {
             services.AddControllers();
 
-            //services.AddSwaggerGen(c =>
-            //   {
-            //       c.SwaggerDoc("v1", new Info { title = "Sample API", version = "version 1" });
-            //   }
-            //);
-            var database = new MemoryDatabase();
+            var databaseHostName = Configuration.GetValue<string>("DatabaseHostName");
+            if (string.IsNullOrEmpty(databaseHostName))
+                databaseHostName = "localhost";
+
+            var database = new MongoDatabase(databaseHostName);
             services.AddSingleton<IDirectionCalculator, DirectionCalculator>();
             services.AddSingleton<INearByFinder>(database);
             services.AddSingleton<IDatabase>(database);
@@ -56,12 +55,8 @@ namespace Web_Api
                 //});
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

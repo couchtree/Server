@@ -5,6 +5,8 @@ services:
     build: .
     container_name: webapi
     restart: on-failure
+    environment: 
+        - DatabaseHostName=database
     expose:
       - 5000
     ports:

@@ -11,7 +11,7 @@ namespace Web_Api.Dependencies
 
     public class MongoDatabase : IDatabase, INearByFinder
     {
-        private readonly Lazy<MongoClient> lazyClient = new Lazy<MongoClient>(() => new MongoClient("mongodb://localhost:27017"));
+        private readonly Lazy<MongoClient> lazyClient;
 
         private IMongoCollection<Player> playerCollection
         {
@@ -33,6 +33,11 @@ namespace Web_Api.Dependencies
 
                 return collection;
             }
+        }
+
+        public MongoDatabase(string hostname)
+        {
+            lazyClient = new Lazy<MongoClient>(() => new MongoClient($"mongodb://{hostname}:27017"));
         }
 
         public bool Contains(Guid id)
