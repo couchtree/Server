@@ -44,7 +44,7 @@ namespace Web_Api.Controllers
 
         }
 
-        private object GetNearby(Guid id)
+        private PositionResponseDTO GetNearby(Guid id)
         {
             throw new NotImplementedException();
         }
