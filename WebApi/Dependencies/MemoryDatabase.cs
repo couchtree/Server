@@ -1,55 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Web_Api.Controllers;
 using Web_Api.Entities;
 using Web_Api.Interfaces;
 
-namespace Web_Api.Dependencies 
+namespace Web_Api.Dependencies
 {
-  public class MemoryDatabase : IDatabase, INearByFinder
-  {
-    private readonly Dictionary<Guid, Position> players = new Dictionary<Guid, Position>();
-
-    public bool Contains(Guid id) 
+    public class MemoryDatabase : IDatabase, INearByFinder
     {
-      return this.players.ContainsKey(id);
-    }
+        private const double critical_distance = 0.1;
+        private readonly Dictionary<Guid, Position> players = new Dictionary<Guid, Position>();
 
-    public void Create(Guid id, Position pos) 
-    {
-      if (this.Contains(id))
-        return;
-      this.players.Add(id, pos);
-    }
+        public bool Contains(Guid id)
+        {
+            return this.players.ContainsKey(id);
+        }
 
-    public void Delete(Guid id) 
-    {
-      if (!this.Contains(id))
-        return;
-      this.players.Remove(id);
-    }
+        public void Create(Guid id, Position pos)
+        {
+            if (this.Contains(id))
+                return;
+            this.players.Add(id, pos);
+        }
 
-    public void Update(Guid id, Position pos) 
-    {
-      if (!this.Contains(id))
-        return;
-      this.players[id] = pos;
-    }
+        public void Delete(Guid id)
+        {
+            if (!this.Contains(id))
+                return;
+            this.players.Remove(id);
+        }
 
-    /*
-    * Find Users considered nearby the given id
-    */
-    public PositionResponseDTO[] GetNearby(Guid id) 
-    {
-      PositionResponseDTO[] nearby = new PositionResponseDTO[3];
-      // TODO Calculate Nearby / Get Nearby from Database
-      for (int i = 0; i < nearby.Length; i++) {
-        nearby[i] = new PositionResponseDTO();
-      }
+        public void Update(Guid id, Position pos)
+        {
+            if (!this.Contains(id))
+                return;
+            this.players[id] = pos;
+        }
 
-      return nearby;
+        /*
+        * Find Users considered nearby the given id
+        */
+        public Position[] GetNearby(Guid id)
+        {
+            var nearby = new List<Position>();
+            if (!this.Contains(id))
+                return nearby.ToArray();
+
+            var me = this.players[id];
+            foreach (var player in this.players)
+            {
+                if (player.Key == id)
+                    continue;
+                if (Math.Abs(player.Value.Lat - me.Lat) < critical_distance ||
+                   Math.Abs(player.Value.Lon - me.Lon) < critical_distance)
+                    nearby.Add(player.Value);
+            }
+
+            return nearby.ToArray();
+        }
     }
-  }
 }

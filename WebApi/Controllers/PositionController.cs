@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using Web_Api.Entities;
 using Web_Api.Interfaces;
 
@@ -35,15 +36,23 @@ namespace Web_Api.Controllers
         [HttpPost("{id}/location")]
         public ActionResult<PositionResponseDTO[]> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
         {
+            var newPosition = new Position { Lat = pos.Lat, Lon = pos.Long };
             if (db.Contains(id))
             {
-                db.Update(id, new Position { Lat = pos.Lat, Lon = pos.Long });
+                db.Update(id, newPosition);
             }
             else
             {
-                db.Create(id, new Position { Lat = pos.Lat, Lon = pos.Long });
+                db.Create(id, newPosition);
             }
-            return this.nearByFinder.GetNearby(id);
+
+            var nearby = this.nearByFinder.GetNearby(id);
+            return nearby.Select((nearBy) => this.CalculateDistance(nearBy, newPosition)).ToArray();
+        }
+
+        private PositionResponseDTO CalculateDistance(Position pos1, Position pos2)
+        {
+            return new PositionResponseDTO();
         }
     }
 }
