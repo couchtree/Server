@@ -47,13 +47,13 @@ namespace Web_Api.Controllers
                 db.Create(id, new Position { Lat = pos.Lat, Lon = pos.Long });
             }
             var resp = GetNearby(id);
-            return new JsonResult("ok") { StatusCode = 200 };
+            return new JsonResult(resp) { StatusCode = 200 };
 
         }
 
         private PositionResponseDTO GetNearby(Guid id)
         {
-            throw new NotImplementedException();
+            return new PositionResponseDTO();
         }
     }
 
