@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  webapi:
+    image: fabian986/stayathome:draft
+    container_name: webapi
+    restart: on-failure
+    expose:
+      - 80
+    ports:
+      - 80
+
+  database:
+    image: mongo:latest
+    container_name: database
+    expose:
+      - 27017
+    ports:
+      - 27017
