@@ -29,12 +29,13 @@ namespace Web_Api
         {
             services.AddControllers();
 
-      //services.AddSwaggerGen(c =>
-      //   {
-      //       c.SwaggerDoc("v1", new Info { title = "Sample API", version = "version 1" });
-      //   }
-      //);
+            //services.AddSwaggerGen(c =>
+            //   {
+            //       c.SwaggerDoc("v1", new Info { title = "Sample API", version = "version 1" });
+            //   }
+            //);
             var database = new MemoryDatabase();
+            services.AddSingleton<IDirectionCalculator, DirectionCalculator>();
             services.AddSingleton<INearByFinder>(database);
             services.AddSingleton<IDatabase>(database);
         }
@@ -47,12 +48,12 @@ namespace Web_Api
             {
                 app.UseDeveloperExceptionPage();
 
-               // app.UseSwagger();
+                // app.UseSwagger();
 
-               // app.UseSwaggerUI(c =>
-               //{
-               //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
-               //});
+                // app.UseSwaggerUI(c =>
+                //{
+                //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+                //});
             }
 
             app.UseHttpsRedirection();
