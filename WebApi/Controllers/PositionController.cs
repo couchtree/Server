@@ -35,7 +35,7 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost("{id}/location")]
-        public ActionResult<PositionResponseDTO> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
+        public ActionResult<PositionResponseDTO[]> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
         {
             if (db.Contains(id))
             {
@@ -48,9 +48,9 @@ namespace Web_Api.Controllers
             return GetNearby(id);
         }
 
-        private PositionResponseDTO GetNearby(Guid id)
+        private PositionResponseDTO[] GetNearby(Guid id)
         {
-            return new PositionResponseDTO();
+            return new PositionResponseDTO[] { new PositionResponseDTO()};
         }
     }
 
