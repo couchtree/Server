@@ -37,10 +37,19 @@ namespace Web_Api.Dependencies
         return;
       this.players[id] = pos;
     }
-    
+
+    /*
+    * Find Users considered nearby the given id
+    */
     public PositionResponseDTO[] GetNearby(Guid id) 
     {
-      return new PositionResponseDTO[] { new PositionResponseDTO() };
+      PositionResponseDTO[] nearby = new PositionResponseDTO[3];
+      // TODO Calculate Nearby / Get Nearby from Database
+      for (int i = 0; i < nearby.Length; i++) {
+        nearby[i] = new PositionResponseDTO();
+      }
+
+      return nearby;
     }
   }
 }
