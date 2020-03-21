@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "nYNneGii0xtQInQOWDqgdq/SRld1ku+8CLiT2Ylv07cUeZjCUln4liEXxyabay3gtzV5AW53dR2JgcYFRCXz0w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\olafr\\source\\repos\\Web Api C#\\Web Api\\Web Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\olafr\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
