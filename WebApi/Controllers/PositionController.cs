@@ -35,7 +35,7 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost("{id}/location")]
-        public ActionResult<PositionResponseDTO> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
+        public ActionResult<PositionResponseDTO[]> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
         {
             if (db.Contains(id))
             {
@@ -48,9 +48,19 @@ namespace Web_Api.Controllers
             return GetNearby(id);
         }
 
-        private PositionResponseDTO GetNearby(Guid id)
+        /*
+         * Find Users considered nearby the given id
+         */
+        private PositionResponseDTO[] GetNearby(Guid id)
         {
-            return new PositionResponseDTO();
+            PositionResponseDTO[] nearby = new PositionResponseDTO[3];
+            // TODO Calculate Nearby / Get Nearby from Database
+            for (int i = 0; i < nearby.Length; i++)
+            {
+                nearby[i] = new PositionResponseDTO();
+            }
+            
+            return nearby;
         }
     }
 
