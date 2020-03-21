@@ -25,7 +25,7 @@ namespace Web_Api.Dependencies
             throw new NotImplementedException();
         }
 
-        public Location[] GetNearby(Guid id) => throw new NotImplementedException();
+        public IEnumerable<Location> GetNearby(Guid id, Location location) => throw new NotImplementedException();
 
         public void Update(Guid id, Location pos)
         {

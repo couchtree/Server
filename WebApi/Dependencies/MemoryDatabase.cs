@@ -39,7 +39,7 @@ namespace Web_Api.Dependencies
         /*
         * Find Users considered nearby the given id
         */
-        public Location[] GetNearby(Guid id)
+        public IEnumerable<Location> GetNearby(Guid id, Location location)
         {
             var nearby = new List<Location>();
             if (!this.Contains(id))
