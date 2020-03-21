@@ -9,48 +9,45 @@ using Web_Api.Interfaces;
 
 namespace Web_Api.Controllers
 {
-    /*
-     * #[put("/<id>", data = "<msg>")]
-        fn update(db: &Db, id: Id, msg: Json<Message>) -> JsonValue {
-            if db.contains_key(&id) {
-                db.insert(id, &msg.contents);
-                json!({ "status": "ok" })
-            } else {
-                json!({ "status": "error" })
-            }
-        }
-     */
     public class PositionDTO
     {
         public float Lat;
         public float Long;
+        public bool at_home;
+    }
+
+    public class PositionResponseDTO
+    {
+        public int dir;
+        public float dist;
+        public float vel_nearing;
+
     }
 
     [ApiController]
     [Route("api/v1/[controller]")]
     public class PlayerController : ControllerBase
     {
-        [HttpPut("{id}/location")]
+        [HttpPost("{id}/location")]
         public JsonResult Put(Guid id, [FromBody] PositionDTO pos, IDatabase db)
         {
             if (db.Contains(id))
             {
                 db.Update(id, new Position { Lat = pos.Lat, Lon = pos.Long });
-                return new JsonResult("ok") { StatusCode = 200 };
             }
             else
             {
                 db.Create(id, new Position { Lat = pos.Lat, Lon = pos.Long });
             }
-            return new JsonResult("error") { StatusCode = 500 };
+            var resp = GetNearby(id);
+            return new JsonResult("ok") { StatusCode = 200 };
+
         }
 
-        [HttpGet("{id}/nearby")]
-        public JsonResult Get(Guid id)
+        private object GetNearby(Guid id)
         {
-            return new JsonResult(GetNearby(id)) { StatusCode = 200 };
+            throw new NotImplementedException();
         }
-
     }
 
 }
