@@ -34,7 +34,7 @@ namespace Web_Api
             //       c.SwaggerDoc("v1", new Info { title = "Sample API", version = "version 1" });
             //   }
             //);
-            services.AddSingleton<IDatabase, FileDatabase>();
+            services.AddSingleton<IDatabase, MemoryDatabase>();
         }
 
 
