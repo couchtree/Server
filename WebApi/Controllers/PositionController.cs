@@ -28,8 +28,15 @@ namespace Web_Api.Controllers
     [Route("api/v1/[controller]")]
     public class PlayerController : ControllerBase
     {
+        private readonly IDatabase db;
+
+        public PlayerController(IDatabase db) 
+        {
+          this.db = db;
+        }
+
         [HttpPost("{id}/location")]
-        public JsonResult Put(Guid id, [FromBody] PositionDTO pos, IDatabase db)
+        public JsonResult Put(Guid id, [FromBody] PositionDTO pos)
         {
             if (db.Contains(id))
             {
