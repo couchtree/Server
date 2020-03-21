@@ -1,5 +1,5 @@
-﻿using Web_Api.Entities;
-using System;
+﻿using System;
+using Web_Api.Entities;
 
 namespace Web_Api.Interfaces
 {

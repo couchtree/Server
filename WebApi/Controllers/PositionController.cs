@@ -6,14 +6,19 @@ using Web_Api.Interfaces;
 
 namespace Web_Api.Controllers
 {
-    public class PositionDTO
+    public class LocationUpdateDTO
     {
         public float Lat { get; set; }
         public float Long { get; set; }
         public bool at_home { get; set; }
     }
 
-    public class PositionResponseDTO
+    public class LocationUpdateResponseDTO
+    {
+        public LocationUpdateResponseNearbyPlayerDTO[] nearby_players { get; set; }
+    }
+
+    public class LocationUpdateResponseNearbyPlayerDTO
     {
         public int dir { get; set; }
         public float dist { get; set; }
@@ -48,7 +53,7 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost("{id}/location")]
-        public ActionResult<PositionResponseDTO[]> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
+        public ActionResult<LocationUpdateResponseDTO> UpdateLocation(Guid id, [FromBody] LocationUpdateDTO pos)
         {
             var newPosition = new Location { lat = pos.Lat, lon = pos.Long };
             if (db.Contains(id))
@@ -60,17 +65,20 @@ namespace Web_Api.Controllers
                 db.Create(id, newPosition);
             }
 
-            var nearby = this.nearByFinder.GetNearby(id);
-            return nearby.Select((nearBy) => this.CreateResponseDTO(newPosition, nearBy)).ToArray();
+            var nearby = this.nearByFinder.GetNearby(id, newPosition);
+            return new LocationUpdateResponseDTO
+            {
+                nearby_players = nearby.Select((nearBy) => this.CreateNearbyPlayerDTO(newPosition, nearBy)).ToArray()
+            };
         }
 
-        private PositionResponseDTO CreateResponseDTO(Location me, Location other)
+        private LocationUpdateResponseNearbyPlayerDTO CreateNearbyPlayerDTO(Location me, Location other)
         {
             var latDistance = me.lat - other.lat;
             var lonDistance = me.lon - other.lon;
             var totalDistance = Math.Sqrt(Math.Pow(latDistance, 2) + Math.Pow(lonDistance, 2));
 
-            return new PositionResponseDTO()
+            return new LocationUpdateResponseNearbyPlayerDTO()
             {
                 dist = (float)totalDistance,
                 dir = (int)dir.CalculateDirection(me, other),
