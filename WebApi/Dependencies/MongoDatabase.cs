@@ -57,10 +57,10 @@ namespace Web_Api.Dependencies
         /*
         * Find Users considered nearby the given id
         */
-        public PositionResponseDTO[] GetNearby(Guid id)
+        public Location[] GetNearby(Guid id)
         {
             // FIXME: STUB
-            PositionResponseDTO[] nearby = new PositionResponseDTO[0];
+            Location[] nearby = new Location[0];
             return nearby;
         }
     }

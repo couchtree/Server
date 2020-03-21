@@ -35,6 +35,7 @@ namespace Web_Api
             //   }
             //);
             var database = new MongoDatabase();
+            services.AddSingleton<IDirectionCalculator, DirectionCalculator>();
             services.AddSingleton<INearByFinder>(database);
             services.AddSingleton<IDatabase>(database);
         }

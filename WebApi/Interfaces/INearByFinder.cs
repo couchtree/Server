@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Web_Api.Controllers;
+using Web_Api.Entities;
 
-namespace Web_Api.Interfaces {
-  public interface INearByFinder 
-  {
-    PositionResponseDTO[] GetNearby(Guid id);
-  }
+namespace Web_Api.Interfaces
+{
+    public interface INearByFinder
+    {
+        Location[] GetNearby(Guid id);
+    }
 }
