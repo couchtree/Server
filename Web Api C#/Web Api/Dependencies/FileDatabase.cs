@@ -9,19 +9,26 @@ namespace Web_Api.Dependencies
 {
     public class FileDatabase : IDatabase
     {
-        public bool Contains(int id)
+        public bool Contains(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public void Insert(int id, Position pos)
+        public void Create(Guid id, Position pos)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(int id, Position pos)
+        public void Delete(Guid id)
         {
             throw new NotImplementedException();
         }
+
+        public void Update(Guid id, Position pos)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

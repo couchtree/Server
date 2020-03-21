@@ -57,11 +57,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\olafr\\source\\repos\\Web Api C#\\Web Api\\Web Api.csproj",
+      "projectUniqueName": "D:\\repos\\Server\\Web Api C#\\Web Api\\Web Api.csproj",
       "projectName": "Web Api",
-      "projectPath": "C:\\Users\\olafr\\source\\repos\\Web Api C#\\Web Api\\Web Api.csproj",
+      "projectPath": "D:\\repos\\Server\\Web Api C#\\Web Api\\Web Api.csproj",
       "packagesPath": "C:\\Users\\olafr\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\olafr\\source\\repos\\Web Api C#\\Web Api\\obj\\",
+      "outputPath": "D:\\repos\\Server\\Web Api C#\\Web Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\olafr\\AppData\\Roaming\\NuGet\\NuGet.Config",

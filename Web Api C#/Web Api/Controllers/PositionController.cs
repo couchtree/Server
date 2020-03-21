@@ -20,26 +20,38 @@ namespace Web_Api.Controllers
             }
         }
      */
+    public class PositionDTO
+    {
+        public float Lat;
+        public float Long;
+    }
 
     [ApiController]
-    [Route("_api/[controller]")]
-    public class PositionController : ControllerBase
+    [Route("api/v1/[controller]")]
+    public class PlayerController : ControllerBase
     {
-        [HttpPut("{id}")]
-        public JsonResult Put(int id, [FromBody] Position pos, IDatabase db)
+        [HttpPut("{id}/location")]
+        public JsonResult Put(Guid id, [FromBody] PositionDTO pos, IDatabase db)
         {
             if (db.Contains(id))
             {
-                db.Insert(id, pos);
+                db.Update(id, new Position { Lat = pos.Lat, Lon = pos.Long });
                 return new JsonResult("ok") { StatusCode = 200 };
             }
             else
             {
-                db.Update(id, pos);
+                db.Create(id, new Position { Lat = pos.Lat, Lon = pos.Long });
             }
-            return new JsonResult("error") { StatusCode = 404 };
+            return new JsonResult("error") { StatusCode = 500 };
+        }
+
+        [HttpGet("{id}/nearby")]
+        public JsonResult Get(Guid id)
+        {
+            return new JsonResult(GetNearby(id)) { StatusCode = 200 };
         }
 
     }
+
 }
 
