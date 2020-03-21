@@ -11,17 +11,16 @@ namespace Web_Api.Controllers
 {
     public class PositionDTO
     {
-        public float Lat;
-        public float Long;
-        public bool at_home;
-    }
+        public float Lat { get; set; }
+        public float Long { get; set; }
+        public bool at_home { get; set; }
+  }
 
     public class PositionResponseDTO
     {
-        public int dir;
-        public float dist;
-        public float vel_nearing;
-
+        public int dir { get; set; }
+        public float dist { get; set; }
+        public float vel_nearing { get; set; }
     }
 
     [ApiController]
@@ -36,7 +35,7 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost("{id}/location")]
-        public JsonResult Put(Guid id, [FromBody] PositionDTO pos)
+        public ActionResult<PositionResponseDTO> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
         {
             if (db.Contains(id))
             {
@@ -46,9 +45,7 @@ namespace Web_Api.Controllers
             {
                 db.Create(id, new Position { Lat = pos.Lat, Lon = pos.Long });
             }
-            var resp = GetNearby(id);
-            return new JsonResult(resp) { StatusCode = 200 };
-
+            return GetNearby(id);
         }
 
         private PositionResponseDTO GetNearby(Guid id)
