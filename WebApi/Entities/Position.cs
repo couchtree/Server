@@ -7,7 +7,7 @@ namespace Web_Api.Entities
 {
     public class Position
     {
-        double Lat;
-        double Lon;
+        public float Lat;
+        public float Lon;
     }
 }
