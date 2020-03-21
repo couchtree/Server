@@ -30,11 +30,11 @@ namespace Web_Api.Controllers
         private readonly IDatabase db;
         private readonly INearByFinder nearByFinder;
 
-    public PlayerController(IDatabase db, INearByFinder nearByFinder) 
+    	public PlayerController(IDatabase db, INearByFinder nearByFinder) 
         {
           this.db = db;
           this.nearByFinder = nearByFinder;
-    }
+	    }
 
         [HttpPost("{id}/location")]
         public ActionResult<PositionResponseDTO[]> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
@@ -49,7 +49,6 @@ namespace Web_Api.Controllers
             }
             return this.nearByFinder.GetNearby(id);
         }
-    }
 
 }
 
