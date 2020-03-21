@@ -15,7 +15,7 @@ namespace Web_Api.Dependencies
             throw new NotImplementedException();
         }
 
-        public void Create(Guid id, Position pos)
+        public void Create(Guid id, Location pos)
         {
             throw new NotImplementedException();
         }
@@ -27,7 +27,7 @@ namespace Web_Api.Dependencies
 
         public PositionResponseDTO[] GetNearby(Guid id) => throw new NotImplementedException();
 
-        public void Update(Guid id, Position pos)
+        public void Update(Guid id, Location pos)
         {
             throw new NotImplementedException();
         }

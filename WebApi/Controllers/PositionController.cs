@@ -37,11 +37,11 @@ namespace Web_Api.Controllers
         {
             if (db.Contains(id))
             {
-                db.Update(id, new Position { Lat = pos.Lat, Lon = pos.Long });
+                db.Update(id, new Location { lat = pos.Lat, lon = pos.Long });
             }
             else
             {
-                db.Create(id, new Position { Lat = pos.Lat, Lon = pos.Long });
+                db.Create(id, new Location { lat = pos.Lat, lon = pos.Long });
             }
             return this.nearByFinder.GetNearby(id);
         }
