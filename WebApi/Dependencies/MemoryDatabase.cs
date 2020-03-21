@@ -8,14 +8,14 @@ namespace Web_Api.Dependencies
     public class MemoryDatabase : IDatabase, INearByFinder
     {
         private const double critical_distance = 0.1;
-        private readonly Dictionary<Guid, Position> players = new Dictionary<Guid, Position>();
+        private readonly Dictionary<Guid, Location> players = new Dictionary<Guid, Location>();
 
         public bool Contains(Guid id)
         {
             return this.players.ContainsKey(id);
         }
 
-        public void Create(Guid id, Position pos)
+        public void Create(Guid id, Location pos)
         {
             if (this.Contains(id))
                 return;
@@ -29,7 +29,7 @@ namespace Web_Api.Dependencies
             this.players.Remove(id);
         }
 
-        public void Update(Guid id, Position pos)
+        public void Update(Guid id, Location pos)
         {
             if (!this.Contains(id))
                 return;
@@ -39,9 +39,9 @@ namespace Web_Api.Dependencies
         /*
         * Find Users considered nearby the given id
         */
-        public Position[] GetNearby(Guid id)
+        public Location[] GetNearby(Guid id)
         {
-            var nearby = new List<Position>();
+            var nearby = new List<Location>();
             if (!this.Contains(id))
                 return nearby.ToArray();
 
@@ -50,8 +50,8 @@ namespace Web_Api.Dependencies
             {
                 if (player.Key == id)
                     continue;
-                if (Math.Abs(player.Value.Lat - me.Lat) < critical_distance ||
-                   Math.Abs(player.Value.Lon - me.Lon) < critical_distance)
+                if (Math.Abs(player.Value.lat - me.lat) < critical_distance ||
+                   Math.Abs(player.Value.lon - me.lon) < critical_distance)
                     nearby.Add(player.Value);
             }
 

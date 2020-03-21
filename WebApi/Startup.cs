@@ -34,7 +34,7 @@ namespace Web_Api
             //       c.SwaggerDoc("v1", new Info { title = "Sample API", version = "version 1" });
             //   }
             //);
-            var database = new MemoryDatabase();
+            var database = new MongoDatabase();
             services.AddSingleton<IDirectionCalculator, DirectionCalculator>();
             services.AddSingleton<INearByFinder>(database);
             services.AddSingleton<IDatabase>(database);

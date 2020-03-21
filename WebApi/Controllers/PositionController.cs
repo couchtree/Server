@@ -50,7 +50,7 @@ namespace Web_Api.Controllers
         [HttpPost("{id}/location")]
         public ActionResult<PositionResponseDTO[]> UpdateLocation(Guid id, [FromBody] PositionDTO pos)
         {
-            var newPosition = new Position { Lat = pos.Lat, Lon = pos.Long };
+            var newPosition = new Location { lat = pos.Lat, lon = pos.Long };
             if (db.Contains(id))
             {
                 db.Update(id, newPosition);
@@ -64,10 +64,10 @@ namespace Web_Api.Controllers
             return nearby.Select((nearBy) => this.CreateResponseDTO(newPosition, nearBy)).ToArray();
         }
 
-        private PositionResponseDTO CreateResponseDTO(Position me, Position other)
+        private PositionResponseDTO CreateResponseDTO(Location me, Location other)
         {
-            var latDistance = me.Lat - other.Lat;
-            var lonDistance = me.Lon - other.Lon;
+            var latDistance = me.lat - other.lat;
+            var lonDistance = me.lon - other.lon;
             var totalDistance = Math.Sqrt(Math.Pow(latDistance, 2) + Math.Pow(lonDistance, 2));
 
             return new PositionResponseDTO()

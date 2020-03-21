@@ -5,6 +5,6 @@ namespace Web_Api.Interfaces
 {
     public interface INearByFinder
     {
-        Position[] GetNearby(Guid id);
+        Location[] GetNearby(Guid id);
     }
 }

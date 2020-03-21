@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Web_Api.Entities
 {
-    public class Position
+    public class Location
     {
-        public float Lat;
-        public float Lon;
+        public float lat;
+        public float lon;
     }
 }

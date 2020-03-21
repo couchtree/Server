@@ -6,7 +6,7 @@ namespace Web_Api.Dependencies
 {
     public class DirectionCalculator : IDirectionCalculator
     {
-        public Directions CalculateDirection(Position me, Position other)
+        public Directions CalculateDirection(Location me, Location other)
         {
             var dir = Directions.West;
 
@@ -32,34 +32,34 @@ namespace Web_Api.Dependencies
             return dir;
         }
 
-        private bool AmINorth(Position me, Position other)
+        private bool AmINorth(Location me, Location other)
         {
-            return me.Lat < other.Lat;
+            return me.lat < other.lat;
         }
 
-        private bool AmISouth(Position me, Position other)
+        private bool AmISouth(Location me, Location other)
         {
-            return me.Lat < other.Lat;
+            return me.lat < other.lat;
         }
 
-        private bool AmIEast(Position me, Position other)
+        private bool AmIEast(Location me, Location other)
         {
-            return me.Lon < other.Lon;
+            return me.lon < other.lon;
         }
 
-        private bool AmIWest(Position me, Position other)
+        private bool AmIWest(Location me, Location other)
         {
-            return me.Lon > other.Lon;
+            return me.lon > other.lon;
         }
 
-        private bool SameLon(Position me, Position other)
+        private bool SameLon(Location me, Location other)
         {
-            return me.Lon == other.Lon;
+            return me.lon == other.lon;
         }
 
-        private bool SameLat(Position me, Position other)
+        private bool SameLat(Location me, Location other)
         {
-            return me.Lat == other.Lat;
+            return me.lat == other.lat;
         }
     }
 }

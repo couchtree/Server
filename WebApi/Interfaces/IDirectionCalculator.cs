@@ -5,6 +5,6 @@ namespace Web_Api.Interfaces
 {
     public interface IDirectionCalculator
     {
-        Directions CalculateDirection(Position me, Position other);
+        Directions CalculateDirection(Location me, Location other);
     }
 }
