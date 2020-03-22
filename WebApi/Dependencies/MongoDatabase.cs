@@ -93,15 +93,17 @@ namespace Web_Api.Dependencies
         public IEnumerable<Location> GetNearby(string id, Location location)
         {
             return playerCollection.Find(
+                    Builders<PlayerModel>.Filter.And(
                     Builders<PlayerModel>.Filter.NearSphere(
                         p => p.currentLocation,
                         GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)),
                         100.0
-                    )
+                    ),
+                    Builders<PlayerModel>.Filter.Eq(p => p.tracked, true),
+                    Builders<PlayerModel>.Filter.Ne(p => p.id, id))
                 )
                 .Limit(6)
                 .ToEnumerable()
-                .Where(p => p.id != id && p.tracked)
                 .Select(p =>
                 {
                     var coords = p.currentLocation.Coordinates;
