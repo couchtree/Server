@@ -53,7 +53,7 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost("{id}/location")]
-        public ActionResult<LocationUpdateResponseDTO> UpdateLocation(Guid id, [FromBody] LocationUpdateDTO pos)
+        public ActionResult<LocationUpdateResponseDTO> UpdateLocation(string id, [FromBody] LocationUpdateDTO pos)
         {
             var newPosition = new Location { lat = pos.Lat, lon = pos.Long };
             if (db.Contains(id))

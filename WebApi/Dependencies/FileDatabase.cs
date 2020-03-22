@@ -10,24 +10,24 @@ namespace Web_Api.Dependencies
 {
     public class FileDatabase : IDatabase, INearByFinder
     {
-        public bool Contains(Guid id)
+        public bool Contains(string id)
         {
             throw new NotImplementedException();
         }
 
-        public void Create(Guid id, Location pos)
+        public void Create(string id, Location pos)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(Guid id)
+        public void Delete(string id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Location> GetNearby(Guid id, Location location) => throw new NotImplementedException();
+        public IEnumerable<Location> GetNearby(string id, Location location) => throw new NotImplementedException();
 
-        public void Update(Guid id, Location pos)
+        public void Update(string id, Location pos)
         {
             throw new NotImplementedException();
         }

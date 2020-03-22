@@ -7,7 +7,7 @@ namespace Web_Api.Entities
 {
     public class Player
     {
-        public Guid guid;
+        public string guid;
         public Location currentLocation;
         public Location previousLocation;
         public bool tracked;

@@ -6,6 +6,6 @@ namespace Web_Api.Interfaces
 {
     public interface INearByFinder
     {
-        IEnumerable<Location> GetNearby(Guid playerId, Location playerLocation);
+        IEnumerable<Location> GetNearby(string playerId, Location playerLocation);
     }
 }
