@@ -13,7 +13,8 @@ namespace Web_Api.Dependencies
     [BsonIgnoreExtraElements]
     public class PlayerModel
     {
-        public string playerId;
+        [BsonRepresentation(BsonType.String)]
+        public string id;
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> currentLocation;
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> previousLocation;
         public bool tracked;
@@ -53,7 +54,7 @@ namespace Web_Api.Dependencies
 
         public bool Contains(string id)
         {
-            return playerCollection.Find(Builders<PlayerModel>.Filter.Eq(p => p.playerId, id)).CountDocuments() == 1;
+            return playerCollection.Find(Builders<PlayerModel>.Filter.Eq(p => p.id, id)).CountDocuments() == 1;
         }
 
         public void Create(string id, Location location)
@@ -61,7 +62,7 @@ namespace Web_Api.Dependencies
             var geoJsonPoint = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(location.lon, location.lat));
             playerCollection.InsertOne(new PlayerModel
             {
-                playerId = id,
+                id = id,
                 currentLocation = geoJsonPoint,
                 previousLocation = geoJsonPoint,
                 atHome = false, // FIXME: use actual client supplied data
@@ -70,20 +71,22 @@ namespace Web_Api.Dependencies
 
         public void Delete(string id)
         {
-            playerCollection.DeleteOne(Builders<PlayerModel>.Filter.Eq(p => p.playerId, id));
+            playerCollection.DeleteOne(Builders<PlayerModel>.Filter.Eq(p => p.id, id));
         }
 
         public void Update(string id, Location location)
         {
-            playerCollection.UpdateOne(
-                Builders<PlayerModel>.Filter.Eq(p => p.playerId, id),
-                Builders<PlayerModel>.Update
-                    .Set("previousLocation", "$currentLocation")
-                    .Set("currentLocation", location),
-                new UpdateOptions { IsUpsert = true }
-            );
-            Console.WriteLine(id);
-            Console.WriteLine(location);
+            PipelineDefinition<PlayerModel, PlayerModel> pipeline = new List<BsonDocument>() {
+                new BsonDocument(new BsonElement(
+                        "$set",
+                        new BsonDocument(new BsonElement("previousLocation", "$currentLocation"))
+                )),
+                new BsonDocument(new BsonElement(
+                    "$set",
+                    new BsonDocument(new BsonElement("currentLocation", GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)).ToBsonDocument()))
+                ))
+            };
+            playerCollection.UpdateOne(Builders<PlayerModel>.Filter.Eq(p => p.id, id), pipeline);
         }
 
         /*
@@ -101,7 +104,7 @@ namespace Web_Api.Dependencies
                 )
                 .Limit(6)
                 .ToEnumerable()
-                .Where(p => p.playerId != id)
+                .Where(p => p.id != id)
                 .Select(p =>
                 {
                     var coords = p.currentLocation.Coordinates;
