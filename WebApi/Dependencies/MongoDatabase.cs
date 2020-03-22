@@ -18,7 +18,8 @@ namespace Web_Api.Dependencies
         public string id;
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> currentLocation;
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> previousLocation;
-        public bool tracked;
+        public bool currentTracked;
+        public bool previousTracked;
         public bool atHome;
     }
 
@@ -62,7 +63,9 @@ namespace Web_Api.Dependencies
                 id = id,
                 currentLocation = geoJsonPoint,
                 previousLocation = geoJsonPoint,
-                atHome = false, // FIXME: use actual client supplied data
+                atHome = location.at_home,
+                currentTracked = location.tracked,
+                previousTracked = location.tracked,
             });
         }
 
@@ -79,6 +82,14 @@ namespace Web_Api.Dependencies
                         new BsonDocument(new BsonElement("previousLocation", "$currentLocation"))
                 )),
                 new BsonDocument(new BsonElement(
+                        "$set",
+                        new BsonDocument(new BsonElement("previousTracked", "$currentTracked"))
+                )),
+                new BsonDocument(new BsonElement(
+                    "$set",
+                    new BsonDocument(new BsonElement("currentTracked", location.tracked))
+                )),
+                new BsonDocument(new BsonElement(
                     "$set",
                     new BsonDocument(new BsonElement("currentLocation", GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)).ToBsonDocument()))
                 ))
@@ -91,17 +102,17 @@ namespace Web_Api.Dependencies
         */
         public IEnumerable<Location> GetNearby(string id, Location location)
         {
-            // FIXME: ignore players that are marked as not tracked
             return playerCollection.Find(
-                    Builders<PlayerModel>.Filter.NearSphere(
-                        p => p.currentLocation,
-                        GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)),
-                        100.0
-                    )
+                    Builders<PlayerModel>.Filter.And(
+                        Builders<PlayerModel>.Filter.Eq(p => p.currentTracked, true),
+                        Builders<PlayerModel>.Filter.NearSphere(
+                            p => p.currentLocation,
+                            GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)),
+                            100.0),
+                        Builders<PlayerModel>.Filter.Ne(p => p.id, id))
                 )
-                .Limit(6)
+                .Limit(5)
                 .ToEnumerable()
-                .Where(p => p.id != id)
                 .Select(p =>
                 {
                     var coords = p.currentLocation.Coordinates;
