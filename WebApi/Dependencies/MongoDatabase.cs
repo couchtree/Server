@@ -40,12 +40,12 @@ namespace Web_Api.Dependencies
             lazyClient = new Lazy<MongoClient>(() => new MongoClient($"mongodb://{hostname}:27017"));
         }
 
-        public bool Contains(Guid id)
+        public bool Contains(string id)
         {
             return playerCollection.Find(Builders<Player>.Filter.Eq(p => p.guid, id)).CountDocuments() == 1;
         }
 
-        public void Create(Guid id, Location location)
+        public void Create(string id, Location location)
         {
             playerCollection.InsertOne(new Player
             {
@@ -56,12 +56,12 @@ namespace Web_Api.Dependencies
             });
         }
 
-        public void Delete(Guid id)
+        public void Delete(string id)
         {
             playerCollection.DeleteOne(Builders<Player>.Filter.Eq(p => p.guid, id));
         }
 
-        public void Update(Guid id, Location location)
+        public void Update(string id, Location location)
         {
             playerCollection.UpdateOne(
                 Builders<Player>.Filter.Eq(p => p.guid, id),
@@ -77,7 +77,7 @@ namespace Web_Api.Dependencies
         /*
         * Find Users considered nearby the given id
         */
-        public IEnumerable<Location> GetNearby(Guid id, Location location)
+        public IEnumerable<Location> GetNearby(string id, Location location)
         {
             return playerCollection.Find(
                     Builders<Player>.Filter.NearSphere(p => p.currentLocation, location.lat, location.lon, 100.0)

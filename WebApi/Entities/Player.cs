@@ -9,7 +9,7 @@ namespace Web_Api.Entities
     [BsonIgnoreExtraElements]
     public class Player
     {
-        public Guid guid;
+        public string guid;
         public Location currentLocation;
         public Location previousLocation;
         public bool tracked;
