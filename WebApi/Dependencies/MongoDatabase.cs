@@ -18,7 +18,8 @@ namespace Web_Api.Dependencies
         public string id;
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> currentLocation;
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> previousLocation;
-        public bool tracked;
+        public bool currentTracked;
+        public bool previousTracked;
         public bool atHome;
     }
 
@@ -63,7 +64,8 @@ namespace Web_Api.Dependencies
                 currentLocation = geoJsonPoint,
                 previousLocation = geoJsonPoint,
                 atHome = location.at_home,
-                tracked = location.tracked,
+                currentTracked = location.tracked,
+                previousTracked = location.tracked,
             });
         }
 
@@ -81,7 +83,11 @@ namespace Web_Api.Dependencies
                 )),
                 new BsonDocument(new BsonElement(
                         "$set",
-                        new BsonDocument(new BsonElement("previousLocation", "$currentLocation"))
+                        new BsonDocument(new BsonElement("previousTracked", "$currentTracked"))
+                )),
+                new BsonDocument(new BsonElement(
+                    "$set",
+                    new BsonDocument(new BsonElement("currentTracked", location.tracked))
                 )),
                 new BsonDocument(new BsonElement(
                     "$set",
@@ -98,13 +104,12 @@ namespace Web_Api.Dependencies
         {
             return playerCollection.Find(
                     Builders<PlayerModel>.Filter.And(
+                        Builders<PlayerModel>.Filter.Eq(p => p.currentTracked, true),
                         Builders<PlayerModel>.Filter.NearSphere(
-                        p => p.currentLocation,
-                        GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)),
-                        100.0
-                    ),
-                    Builders<PlayerModel>.Filter.Eq(p => p.tracked, true),
-                    Builders<PlayerModel>.Filter.Ne(p => p.id, id))
+                            p => p.currentLocation,
+                            GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)),
+                            100.0),
+                        Builders<PlayerModel>.Filter.Ne(p => p.id, id))
                 )
                 .Limit(5)
                 .ToEnumerable()
