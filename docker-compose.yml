@@ -26,3 +26,4 @@ services:
       - 443:443
     volumes:
       - ./Caddyfile:/etc/Caddyfile
+      - caddycache:/root/.caddy

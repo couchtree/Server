@@ -16,8 +16,8 @@ POST https://creative-two.com/api/v1/player/3dea1340-e9ab-497a-b9cf-c5a70764ee32
 Content-Type: application/json
 
 {
-  "Lat": 1.05,
-  "Long": 0.99,
+  "Lat": 1.000005,
+  "Long": 0.999999,
   "at_home": true,
   "tracked": true
 }
