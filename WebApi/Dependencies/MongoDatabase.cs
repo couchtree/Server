@@ -7,6 +7,7 @@ using Web_Api.Interfaces;
 using MongoDB.Driver;
 using MongoDB.Driver.GeoJsonObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 namespace Web_Api.Dependencies
 {
