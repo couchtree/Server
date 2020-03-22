@@ -9,5 +9,7 @@ namespace Web_Api.Entities
     {
         public double lat;
         public double lon;
+        public bool tracked;
+        public bool at_home;
     }
 }

@@ -62,7 +62,8 @@ namespace Web_Api.Dependencies
                 id = id,
                 currentLocation = geoJsonPoint,
                 previousLocation = geoJsonPoint,
-                atHome = false, // FIXME: use actual client supplied data
+                atHome = location.at_home,
+                tracked = location.tracked,
             });
         }
 

@@ -11,6 +11,7 @@ namespace Web_Api.Controllers
         public float Lat { get; set; }
         public float Long { get; set; }
         public bool at_home { get; set; }
+        public bool Tracked { get; set; }
     }
 
     public class LocationUpdateResponseDTO
@@ -55,7 +56,7 @@ namespace Web_Api.Controllers
         [HttpPost("{id}/location")]
         public ActionResult<LocationUpdateResponseDTO> UpdateLocation(string id, [FromBody] LocationUpdateDTO pos)
         {
-            var newPosition = new Location { lat = pos.Lat, lon = pos.Long };
+            var newPosition = new Location { lat = pos.Lat, lon = pos.Long, tracked = pos.Tracked, at_home = pos.at_home };
             if (db.Contains(id))
             {
                 db.Update(id, newPosition);
