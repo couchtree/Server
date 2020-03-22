@@ -92,7 +92,6 @@ namespace Web_Api.Dependencies
         */
         public IEnumerable<Location> GetNearby(string id, Location location)
         {
-            // FIXME: ignore players that are marked as not tracked
             return playerCollection.Find(
                     Builders<PlayerModel>.Filter.NearSphere(
                         p => p.currentLocation,
@@ -102,7 +101,7 @@ namespace Web_Api.Dependencies
                 )
                 .Limit(6)
                 .ToEnumerable()
-                .Where(p => p.id != id)
+                .Where(p => p.id != id && p.tracked)
                 .Select(p =>
                 {
                     var coords = p.currentLocation.Coordinates;
