@@ -1,0 +1,5 @@
+localhost {
+        proxy / localhost:8080 {
+                transparent
+        }
+}
