@@ -1,11 +1,25 @@
 ### Send POST request with json body
-POST http://localhost:5000/api/v1/player/3dea1340-e9ab-497a-b9cf-c5d40764ee05/location
+POST https://creative-two.com/api/v1/player/3dea1340-e9ab-497a-b9cf-c5d40764ee05/location
 Content-Type: application/json
 
 {
   "Lat": 1,
   "Long": 1,
-  "at_home": true
+  "at_home": true,
+  "tracked": true
+}
+
+###
+
+### Send POST request with json body
+POST https://creative-two.com/api/v1/player/3dea1340-e9ab-497a-b9cf-c5a70764ee32/location
+Content-Type: application/json
+
+{
+  "Lat": 1.05,
+  "Long": 0.99,
+  "at_home": true,
+  "tracked": true
 }
 
 ###

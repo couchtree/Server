@@ -5,16 +5,24 @@ services:
     build: .
     container_name: webapi
     restart: on-failure
-    environment: 
+    environment:
         - DatabaseHostName=database
     expose:
       - 5000
     ports:
-      - 80:5000
+      - 8080:5000
 
   database:
     image: mongo:latest
     container_name: database
     expose:
       - 27017
-    
+
+  proxy:
+    image: abiosoft/caddy
+    container_name: proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/Caddyfile
