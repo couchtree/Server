@@ -80,6 +80,10 @@ namespace Web_Api.Dependencies
                         new BsonDocument(new BsonElement("previousLocation", "$currentLocation"))
                 )),
                 new BsonDocument(new BsonElement(
+                        "$set",
+                        new BsonDocument(new BsonElement("previousLocation", "$currentLocation"))
+                )),
+                new BsonDocument(new BsonElement(
                     "$set",
                     new BsonDocument(new BsonElement("currentLocation", GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)).ToBsonDocument()))
                 ))
@@ -94,7 +98,7 @@ namespace Web_Api.Dependencies
         {
             return playerCollection.Find(
                     Builders<PlayerModel>.Filter.And(
-                    Builders<PlayerModel>.Filter.NearSphere(
+                        Builders<PlayerModel>.Filter.NearSphere(
                         p => p.currentLocation,
                         GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)),
                         100.0
@@ -102,7 +106,7 @@ namespace Web_Api.Dependencies
                     Builders<PlayerModel>.Filter.Eq(p => p.tracked, true),
                     Builders<PlayerModel>.Filter.Ne(p => p.id, id))
                 )
-                .Limit(6)
+                .Limit(5)
                 .ToEnumerable()
                 .Select(p =>
                 {
