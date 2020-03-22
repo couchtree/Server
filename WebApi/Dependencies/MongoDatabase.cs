@@ -37,10 +37,6 @@ namespace Web_Api.Dependencies
                 // create additional indices for the collection of players
                 // (idempotent, only affects db if index has not yet been created)
                 collection.Indexes.CreateOne(new CreateIndexModel<PlayerModel>(
-                        Builders<PlayerModel>.IndexKeys.Ascending(p => p.playerId),
-                        new CreateIndexOptions { Unique = true }
-                ));
-                collection.Indexes.CreateOne(new CreateIndexModel<PlayerModel>(
                         Builders<PlayerModel>.IndexKeys.Geo2DSphere(p => p.currentLocation)
                 ));
 
