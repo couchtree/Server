@@ -21,6 +21,8 @@ namespace Web_Api.Dependencies
         public bool currentTracked;
         public bool previousTracked;
         public bool atHome;
+        public long currentTimestamp;
+        public long previousTimestamp;
     }
 
     public class MongoDatabase : IDatabase, INearByFinder
@@ -66,6 +68,8 @@ namespace Web_Api.Dependencies
                 atHome = location.at_home,
                 currentTracked = location.tracked,
                 previousTracked = location.tracked,
+                currentTimestamp = location.timestamp,
+                previousTimestamp = location.timestamp,
             });
         }
 
@@ -86,8 +90,16 @@ namespace Web_Api.Dependencies
                         new BsonDocument(new BsonElement("previousTracked", "$currentTracked"))
                 )),
                 new BsonDocument(new BsonElement(
+                        "$set",
+                        new BsonDocument(new BsonElement("previousTimestamp", "$currentTimestamp"))
+                )),
+                new BsonDocument(new BsonElement(
                     "$set",
                     new BsonDocument(new BsonElement("currentTracked", location.tracked))
+                )),
+                new BsonDocument(new BsonElement(
+                    "$set",
+                    new BsonDocument(new BsonElement("currentTimestamp", location.timestamp))
                 )),
                 new BsonDocument(new BsonElement(
                     "$set",
