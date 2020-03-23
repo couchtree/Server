@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   webapi:
-    image: fabian986/stayathome:latest
+    image: couchtreeapp/backend:latest
     build: .
     container_name: webapi
     restart: on-failure
