@@ -38,6 +38,8 @@ namespace Web_Api.Dependencies
 
         private const double earthRadius = 6371e3;
 
+        // Adapted from https://www.movable-type.co.uk/scripts/latlong.html
+        // (c) Chris Veness 2002-2019 under the MIT License
         private double GeoDist(Location l1, Location l2)
         {
             var phi1 = l1.lat.ToRadians();
