@@ -16,13 +16,16 @@ namespace Web_Api.Dependencies
     {
         [BsonRepresentation(BsonType.String)]
         public string id;
+        public long creationTime;
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> currentLocation;
+        public long currentTimestamp;
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> previousLocation;
+        public long previousTimestamp;
         public bool tracked;
         public bool atHome;
     }
 
-    public class MongoDatabase : IDatabase, INearByFinder
+    public class MongoDatabase : IDatabase
     {
         private readonly Lazy<MongoClient> lazyClient;
 
@@ -54,16 +57,22 @@ namespace Web_Api.Dependencies
             return playerCollection.Find(Builders<PlayerModel>.Filter.Eq(p => p.id, id)).CountDocuments() == 1;
         }
 
-        public void Create(string id, Location location)
+        public void Create(string id)
         {
-            var geoJsonPoint = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(location.lon, location.lat));
-            playerCollection.InsertOne(new PlayerModel
-            {
-                id = id,
-                currentLocation = geoJsonPoint,
-                previousLocation = geoJsonPoint,
-                atHome = false, // FIXME: use actual client supplied data
-            });
+            var crt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var geoJsonPoint = GeoJson.Point(GeoJson.Geographic(0, 0));
+            playerCollection.InsertOne(
+                new PlayerModel
+                {
+                    id = id,
+                    creationTime = crt,
+                    currentLocation = geoJsonPoint,
+                    currentTimestamp = crt,
+                    previousLocation = geoJsonPoint,
+                    previousTimestamp = crt,
+                    atHome = false,
+                    tracked = false,
+                });
         }
 
         public void Delete(string id)
@@ -71,42 +80,77 @@ namespace Web_Api.Dependencies
             playerCollection.DeleteOne(Builders<PlayerModel>.Filter.Eq(p => p.id, id));
         }
 
-        public void Update(string id, Location location)
+        public void Update(string id, LocationUpdateDTO ludto)
         {
             PipelineDefinition<PlayerModel, PlayerModel> pipeline = new List<BsonDocument>() {
                 new BsonDocument(new BsonElement(
-                        "$set",
-                        new BsonDocument(new BsonElement("previousLocation", "$currentLocation"))
-                )),
-                new BsonDocument(new BsonElement(
                     "$set",
-                    new BsonDocument(new BsonElement("currentLocation", GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)).ToBsonDocument()))
+                    new BsonDocument(new List<BsonElement>() {
+                        new BsonElement("previousLocation", "$currentLocation"),
+                        new BsonElement("previousTimestamp", "$currentTimestamp"),
+                        new BsonElement("currentLocation", GeoJson.Point(GeoJson.Geographic(ludto.Lon, ludto.Lat)).ToBsonDocument()),
+                        new BsonElement("currentTimestamp", ludto.Timestamp),
+                        new BsonElement("atHome", ludto.AtHome),
+                        new BsonElement("tracked", ludto.Tracked)
+                    })
                 ))
             };
             playerCollection.UpdateOne(Builders<PlayerModel>.Filter.Eq(p => p.id, id), pipeline);
         }
 
+        [BsonIgnoreExtraElements]
+        public class NearbyPlayerModel
+        {
+            public GeoJsonPoint<GeoJson2DGeographicCoordinates> currentLocation;
+            public long currentTimestamp;
+            public GeoJsonPoint<GeoJson2DGeographicCoordinates> previousLocation;
+            public long previousTimestamp;
+            public double calculatedDist;
+        }
+
         /*
         * Find Users considered nearby the given id
         */
-        public IEnumerable<Location> GetNearby(string id, Location location)
+        public IEnumerable<NearbyPlayer> GetNearby(string id, Location location)
         {
-            // FIXME: ignore players that are marked as not tracked
-            return playerCollection.Find(
-                    Builders<PlayerModel>.Filter.NearSphere(
-                        p => p.currentLocation,
-                        GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)),
-                        100.0
-                    )
-                )
-                .Limit(6)
-                .ToEnumerable()
-                .Where(p => p.id != id)
-                .Select(p =>
+            return playerCollection.Aggregate().AppendStage<BsonDocument>(
+                new BsonDocument(new BsonElement(
+                    "$geoNear",
+                    new BsonDocument(new List<BsonElement>() {
+                        new BsonElement("key", "currentLocation"),
+                        new BsonElement("near", GeoJson.Point(GeoJson.Geographic(location.lon, location.lat)).ToBsonDocument()),
+                        new BsonElement("distanceField", "calculatedDist"),
+                        new BsonElement("maxDistance", NearbyPlayer.maxDistance),
+                        new BsonElement("query",
+                            new BsonDocument(new BsonElement("$and", new BsonArray(new List<BsonDocument>() {
+                                    new BsonDocument(new BsonElement("id", new BsonDocument(new BsonElement("$ne", id)))),
+                                    new BsonDocument(new BsonElement("tracked", true))
+                            }))
+                        ))
+                    })
+                ))
+            ).AppendStage<NearbyPlayerModel>(
+                new BsonDocument(new BsonElement(
+                    "$project",
+                    new BsonDocument(new List<BsonElement>() {
+                        new BsonElement("currentLocation", 1),
+                        new BsonElement("currentTimestamp", 1),
+                        new BsonElement("previousLocation", 1),
+                        new BsonElement("previousTimestamp", 1),
+                        new BsonElement("calculatedDist", 1),
+                    })
+                ))
+            ).Limit(5).ToEnumerable().Select(p =>
+            {
+                return new NearbyPlayer
                 {
-                    var coords = p.currentLocation.Coordinates;
-                    return new Location { lon = coords.Longitude, lat = coords.Latitude };
-                });
+                    currentLocation = p.currentLocation,
+                    currentTimestamp = p.currentTimestamp,
+                    previousLocation = p.previousLocation,
+                    previousTimestamp = p.previousTimestamp,
+                    calculatedDist = p.calculatedDist
+                };
+            });
         }
     }
 }

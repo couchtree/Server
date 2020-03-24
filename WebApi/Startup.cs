@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace Web_Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy());
 
             var databaseHostName = Configuration.GetValue<string>("DatabaseHostName");
             if (string.IsNullOrEmpty(databaseHostName))
@@ -35,7 +36,6 @@ namespace Web_Api
 
             var database = new MongoDatabase(databaseHostName);
             services.AddSingleton<IDirectionCalculator, DirectionCalculator>();
-            services.AddSingleton<INearByFinder>(database);
             services.AddSingleton<IDatabase>(database);
         }
 

@@ -32,34 +32,16 @@ namespace Web_Api.Dependencies
             return dir;
         }
 
-        private bool AmINorth(Location me, Location other)
-        {
-            return me.lat < other.lat;
-        }
+        private bool AmINorth(Location me, Location other) => me.lat < other.lat;
 
-        private bool AmISouth(Location me, Location other)
-        {
-            return me.lat < other.lat;
-        }
+        private bool AmISouth(Location me, Location other) => me.lat < other.lat;
 
-        private bool AmIEast(Location me, Location other)
-        {
-            return me.lon < other.lon;
-        }
+        private bool AmIEast(Location me, Location other) => me.lon < other.lon;
 
-        private bool AmIWest(Location me, Location other)
-        {
-            return me.lon > other.lon;
-        }
+        private bool AmIWest(Location me, Location other) => me.lon > other.lon;
 
-        private bool SameLon(Location me, Location other)
-        {
-            return me.lon == other.lon;
-        }
+        private bool SameLon(Location me, Location other) => me.lon == other.lon;
 
-        private bool SameLat(Location me, Location other)
-        {
-            return me.lat == other.lat;
-        }
+        private bool SameLat(Location me, Location other) => me.lat == other.lat;
     }
 }

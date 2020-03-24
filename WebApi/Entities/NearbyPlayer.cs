@@ -5,14 +5,16 @@ using System.Threading.Tasks;
 
 namespace Web_Api.Entities
 {
-    public class Player
+    public class NearbyPlayer
     {
-        public string id;
+        public const double maxDistance = 100;
+
         public Location currentLocation;
         public long currentTimestamp;
         public Location previousLocation;
         public long previousTimestamp;
-        public bool tracked;
-        public bool atHome;
+
+        /// <summary>Distance to the nearby player in meters</summary>
+        public double calculatedDist;
     }
 }

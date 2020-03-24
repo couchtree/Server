@@ -8,14 +8,14 @@ using Web_Api.Interfaces;
 
 namespace Web_Api.Dependencies
 {
-    public class FileDatabase : IDatabase, INearByFinder
+    public class FileDatabase : IDatabase
     {
         public bool Contains(string id)
         {
             throw new NotImplementedException();
         }
 
-        public void Create(string id, Location pos)
+        public void Create(string id)
         {
             throw new NotImplementedException();
         }
@@ -25,13 +25,11 @@ namespace Web_Api.Dependencies
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Location> GetNearby(string id, Location location) => throw new NotImplementedException();
+        public IEnumerable<NearbyPlayer> GetNearby(string id, Location location) => throw new NotImplementedException();
 
-        public void Update(string id, Location pos)
+        public void Update(string id, LocationUpdateDTO ludto)
         {
             throw new NotImplementedException();
         }
-
-
     }
 }
