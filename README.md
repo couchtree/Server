@@ -18,9 +18,9 @@ http://localhost:5000/api/v1
 ```Content-type: application/json```  
 ### API description
 #### Add and update players location  
-Url: ```POST  player/<player id>/location```  
+Request: ```POST  player/<player id>/location```  
 Body:
-```
+```json5
 {  
 	"Lat": 1.130000,  
 	"Long": 1.100002,  
@@ -29,17 +29,14 @@ Body:
 }
 ```  
 Response: 
-```
+```json5
 {
     "nearby_players": [
         {
-            "dir": 6,
-            "dist": 83.23,
-            "vel_nearing": 3
+            "dir": 6, // general direction of other player Enum: [0:"n",1:"ne",2:"e",3:"se",4:"s",5:"sw",6:"w",7:"nw"]
+            "dist": 83.23, // distance in meters to a nearby player
+            "vel_nearing": 3 // speed in km/h with which a nearby player is closing in
         }
     ]
 }
 ```  
-\<dir\>: general direction of other player Enum: [0:"n",1:"ne",2:"e",3:"se",4:"s",5:"sw",6:"w",7:"nw"]  
-\<dist\>: distance in meters to a nearby player  
-\<vel_nearing\>: speed in km/h with which a nearby player is closing in  
