@@ -18,7 +18,7 @@ http://localhost:5000/api/v1
 ```Content-type: application/json```  
 ### API description
 #### Add and update players location  
-Url: ```GET  player/<player id>/location```  
+Url: ```POST  player/<player id>/location```  
 Body:
 ```
 {  
