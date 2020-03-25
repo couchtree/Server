@@ -56,7 +56,7 @@ namespace Web_Api.Controllers
         [HttpPost("{id}/location")]
         public ActionResult<LocationUpdateResponseDTO> UpdateLocation(string id, [FromBody] LocationUpdateDTO pos)
         {
-            var newPosition = new Location { lat = pos.Lat, lon = pos.Long, tracked = pos.Tracked, at_home = pos.at_home };
+            Location newPosition = CreateLocationFromDTO(pos);
             if (db.Contains(id))
             {
                 db.Update(id, newPosition);
@@ -70,6 +70,18 @@ namespace Web_Api.Controllers
             return new LocationUpdateResponseDTO
             {
                 nearby_players = nearby.Select((nearBy) => this.CreateNearbyPlayerDTO(newPosition, nearBy)).ToArray()
+            };
+        }
+
+        private static Location CreateLocationFromDTO(LocationUpdateDTO pos)
+        {
+            return new Location
+            {
+                lat = pos.Lat,
+                lon = pos.Long,
+                tracked = pos.Tracked,
+                at_home = pos.at_home,
+                timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             };
         }
 
